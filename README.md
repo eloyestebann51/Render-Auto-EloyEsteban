@@ -38,3 +38,28 @@ La idea es que **cualquier push a la rama `main`** Render despliega la versión.
 
 ## Estructura del proyecto
 ![alt text](image.png)
+
+# Pipeline de Despliegue con Render y Tests Automáticos
+
+Este pipeline está basado en **Render** + **Build Command** y ejecuta automáticamente los tests antes de desplegar.
+
+## 1. Clonar el repositorio
+
+```bash
+git clone <URL_DEL_REPO>
+cd <NOMBRE_DEL_REPO>
+```
+
+## 2. Instalar dependencias localmente
+
+```bash
+npm install
+```
+
+## 3. Ejecutar los test manualmente
+
+```bash
+npm test
+```
+Si los tests pasan → listo para deploy
+Si algún test falla → corregir antes de push
