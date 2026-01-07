@@ -39,6 +39,41 @@ La idea es que **cualquier push a la rama `main`** Render despliega la versión.
 ## Estructura del proyecto
 ![alt text](image.png)
 
+# Configurar Render
+
+## 1. Crear cuenta y entrar a Render
+
+1. Ve a https://render.com
+2. Regístrate o inicia sesión 
+3. Asegúrate de tener acceso al repositorio que quieres desplegar.
+
+## 2. Crear nuevo Web Service
+
+1. En tu Dashboard, haz click en New → Web Service
+2. Selecciona tu repositorio (GitHub, GitLab o Bitbucket)
+3. Autoriza a Render a acceder al repositorio si es la primera vez.
+
+## 3. Configurar los parámetros del servicio
+
+En la pantalla de creación:
+- **Name:** Nombre de tu servicio (ej. mi-app)
+- **Environment:** Node (o el que corresponda según tu proyecto)
+- **Branch:** main (o la rama que quieras desplegar automáticamente)
+- **Build Command:**
+    
+    ```bash
+    npm install && npm test
+    ```
+    Esto instalará dependencias y ejecutará los tests. Si fallan, el deploy se bloquea.
+
+## 4. Habilitar despliegue automático
+
+Marca la opción Auto Deploy en **On Commit**
+
+Cada vez que hagas un commit se despliega solo en Render.
+
+
+
 # Pipeline de Despliegue con Render y Tests Automáticos
 
 Este pipeline está basado en **Render** + **Build Command** y ejecuta automáticamente los tests antes de desplegar.
@@ -61,5 +96,58 @@ npm install
 ```bash
 npm test
 ```
-Si los tests pasan → listo para deploy
-Si algún test falla → corregir antes de push
+- **Si los tests pasan → listo para deploy**
+- **Si algún test falla → corregir antes de push**
+
+## 4. Hacer un cambio y preparar commit
+1. Modificar archivos (`src/` o `test/`)
+2. Agregar cambios:
+
+```bash
+git add .
+```
+
+3. Hacer commit:
+
+```bash
+git commit -m "<Mensaje>"
+```
+
+## 5. Push a la rama principal
+
+```bash
+git push origin main
+```
+
+**Render ejecuta automáticamnte:**
+
+```bash
+npm install
+npm test
+```
+
+## 6. Verificar resultado en Render
+
+1. Abre tu servicio en Render → Build & Deploy logs
+2. Confirma:
+    - Tests ejecutados y pasan
+    - Deploy exitoso
+    - Versión publicada corresponde al commit
+
+## 7. Probar fallo controlado
+
+1. Modificar Test para que falle:
+
+```bash
+expect(sum(2,3)).toBe(6); // fallo intencionado
+```
+
+2. Commit y push → Render ejecutará Build Command
+3. Comprobar logs en Render
+
+## 8. Rollback manual
+
+1. En Render → pestaña Deploys / Events
+2. Selecciona el commit estable anterior
+3. Haz click en Rollback
+4. Verifica que la web vuelve a funcionar
